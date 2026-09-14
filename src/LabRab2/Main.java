@@ -8,6 +8,7 @@ public class Main {
 
     public static void main(String[] args) {
 
+        // Задаём разреженную матрицу 4x4 (CCS)
         int[] values = {3, 5, 7, 9, 2};
         int[] rows = {3, 0, 1, 3, 1};
         int[] col_ptr = {0, 1, 4, 4, 5};

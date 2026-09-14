@@ -37,7 +37,6 @@ public class MatrixMirror {
 
         // Теперь нужно расположить элементы в порядке CCS:
         // сначала по столбцам
-
         for (int i = 0; i < count - 1; i++) {
             for (int j = i + 1; j < count; j++) {
                 if (newCols[i] > newCols[j]) {
@@ -59,7 +58,7 @@ public class MatrixMirror {
             }
         }
 
-        // Формируем colPointers
+        // Формируем col_ptr
         int[] newColPtr = new int[n + 1];
 
         index = 0;

@@ -14,22 +14,20 @@ public class CCSMatrix {
         this.col_ptr = col_ptr;
     }
 
-    public int getSize() {
-        return size;
-    }
+    public int getSize() {return size;}
 
-    public int[] getValues() {
-        return values;
-    }
+    public int[] getValues() {return values;}
 
-    public int[] getRows() {
-        return rows;
-    }
+    public int[] getRows() {return rows;}
 
-    public int[] getCol_ptr() {
-        return col_ptr;
-    }
+    public int[] getCol_ptr() {return col_ptr;}
 
+    // row = 0, col = 0:
+    // col_ptr[0] = 0, col_ptr_[1] = 1 => k = 0
+    //  => rows[0] == row (3 == 0)? нет => value = 0
+    // row = 0, col = 1:
+    // col_ptr[1] = 1, col_ptr[2] = 4 => k = 1,2,3
+    // => rows[1](0) = row(0) => value = value[1] = 5 и т.д.
     public void printMatrix() {
         for (int row = 0; row < size; row++) {
             for (int col = 0; col < size; col++) {
