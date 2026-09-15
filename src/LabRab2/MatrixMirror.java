@@ -5,72 +5,44 @@ public class MatrixMirror {
     public static CCSMatrix mirror(CCSMatrix matrix) {
 
         int n = matrix.getSize();
+
         int[] oldValues = matrix.getValues();
         int[] oldRows = matrix.getRows();
-        int[] oldCols = matrix.getCol_ptr();
+        int[] oldColPtr = matrix.getCol_ptr();
 
         int count = oldValues.length;
 
         int[] newValues = new int[count];
         int[] newRows = new int[count];
-        int[] newCols = new int[count];
+        int[] newColPtr = new int[n + 1];
 
         int index = 0;
 
-        // Проходим по всем столбцам исходной матрицы
-        for (int col = 0; col < n; col++) {
-            // Проходим по ненулевым элементам текущего столбца
-            for (int k = oldCols[col]; k < oldCols[col + 1]; k++) {
-                int row = oldRows[k];
-                int value = oldValues[k];
+        // Идём сразу по новым столбцам
+        for (int newCol = 0; newCol < n; newCol++) {
 
-                int newRow = n - 1 - col;
-                int newCol = n - 1 - row;
+            newColPtr[newCol] = index;
 
-                newValues[index] = value;
-                newRows[index] = newRow;
-                newCols[index] = newCol;
+            // Перебираем все старые столбцы
+            for (int oldCol = 0; oldCol < n; oldCol++) {
 
-                index++;
-            }
-        }
-
-        // Теперь нужно расположить элементы в порядке CCS:
-        // сначала по столбцам
-        for (int i = 0; i < count - 1; i++) {
-            for (int j = i + 1; j < count; j++) {
-                if (newCols[i] > newCols[j]) {
-
-                    int temp;
-
-                    temp = newCols[i];
-                    newCols[i] = newCols[j];
-                    newCols[j] = temp;
-
-                    temp = newRows[i];
-                    newRows[i] = newRows[j];
-                    newRows[j] = temp;
-
-                    temp = newValues[i];
-                    newValues[i] = newValues[j];
-                    newValues[j] = temp;
+                // Перебираем ненулевые элементы старого столбца
+                for (int k = oldColPtr[oldCol]; k < oldColPtr[oldCol + 1]; k++) {
+                    int oldRow = oldRows[k];
+                    // Куда попадёт элемент после отражения?
+                    int resultCol = n - 1 - oldRow;
+                    // Если попал в текущий новый столбец
+                    if (resultCol == newCol) {
+                        int resultRow = n - 1 - oldCol;
+                        newValues[index] = oldValues[k];
+                        newRows[index] = resultRow;
+                        index++;
+                    }
                 }
             }
         }
 
-        // Формируем col_ptr
-        int[] newColPtr = new int[n + 1];
-
-        index = 0;
-
-        for (int col = 0; col < n; col++) {
-            newColPtr[col] = index;
-            while (index < count && newCols[index] == col) {
-                index++;
-            }
-        }
-
-        newColPtr[n] = count;
+        newColPtr[n] = index;
 
         return new CCSMatrix(n, newValues, newRows, newColPtr);
     }
